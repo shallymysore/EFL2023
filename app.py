@@ -6,11 +6,11 @@ import json
 
 app = Flask(__name__)
 
-#client = MongoClient("mongodb+srv://efladmin:god_is_watching@cluster0.eezohvz.mongodb.net/?retryWrites=true&w=majority")
+client = MongoClient("mongodb+srv://efladmin:god_is_watching@cluster0.eezohvz.mongodb.net/?retryWrites=true&w=majority")
 
-#db=client["efl2023"]
+db=client["efl2023"]
 
-#collections = db["eflCricket"]
+collections = db["eflCricket"]
 
 @app.route("/")
 def welcome():
