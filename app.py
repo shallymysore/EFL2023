@@ -16,6 +16,14 @@ collections = db["eflCricket"]
 def welcome():
     return "Welcome to EFL2023"
 
+@app.route('/getallplayers', methods=["GET"])
+def get_all_players():
+    players = []
+    cursor = collections.find()
+    for player in cursor:
+        players.append(player)
+    return json.loads(json_util.dumps(players))
+
 @app.route('/getplayer', methods=["GET"])
 def get_player():
     tier1 = []
