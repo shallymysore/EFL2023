@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'EFL2023'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CAC99540B3C244279D0EAE8E89FC1EE6 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_915B174EB0C7441AA68E8F55ECD15FD2 }}
