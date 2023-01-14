@@ -12,6 +12,10 @@ db=client["efl2023"]
 
 collections = db["eflCricket"]
 
+@app.route("/")
+def welcome():
+    return "Welcome to EFL2023"
+
 @app.route('/getplayer', methods=["GET"])
 def get_player():
     tier1 = []
@@ -53,5 +57,5 @@ def update_player(_id):
     return json_util.dumps(result.raw_result)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
     
