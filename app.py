@@ -3,9 +3,10 @@ from pymongo import MongoClient
 import random
 from bson import json_util,ObjectId
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 client = MongoClient("mongodb+srv://efladmin:god_is_watching@cluster0.eezohvz.mongodb.net/?retryWrites=true&w=majority")
 
 db=client["efl2023"]
