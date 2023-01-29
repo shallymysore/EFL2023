@@ -4,6 +4,7 @@ import random
 from bson import json_util,ObjectId
 import json
 from flask_cors import CORS
+import urllib.parse
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +27,16 @@ def get_all_players():
     for player in cursor:
         players.append(player)
     return json.loads(json_util.dumps(players))
+
+@app.route('/getspecificplayer/<name>', methods=["GET"])
+def get_a_player(name):
+    name = urllib.parse.unquote(name)
+    player_query = {"name":{"$regex":name,"$options" :'i'}}
+    player_data = collections.find_one(player_query)
+    if player_data:
+        return json.loads(json_util.dumps(player_data))
+    else:
+        return json.loads(json_util.dumps("player not found"))
 
 @app.route('/getallownersdata', methods=["GET"])
 def get_all_owners():
