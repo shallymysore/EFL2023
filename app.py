@@ -101,8 +101,8 @@ def update_player(_id):
             elif updated_data["role"] == "Bowler":
                 owner_items["ballCount"] = owner_items["ballCount"] + 1
             elif updated_data["role"] == "Allrounder":
-                owner_items["batCount"] = owner_items["batCount"] + 1
-                owner_items["ballCount"] = owner_items["ballCount"] + 1
+                owner_items["arCount"] = owner_items["arCount"] + 1
+                #owner_items["ballCount"] = owner_items["ballCount"] + 1
             elif updated_data["role"] == "WK-Batter":
                 owner_items["batCount"] = owner_items["batCount"] + 1
                 owner_items["wkCount"] = owner_items["wkCount"] + 1
