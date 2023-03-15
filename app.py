@@ -5,9 +5,18 @@ from bson import json_util,ObjectId
 import json
 from flask_cors import CORS
 import urllib.parse
+#socket code
+#from flask_socketio import SocketIO,emit,join_room,send
+#from flask_cors import CORS
+#import time
+#import os
 
 app = Flask(__name__)
 CORS(app)
+
+#socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
+#socketio = SocketIO(app)
+
 client = MongoClient("mongodb+srv://efladmin:god_is_watching@cluster0.eezohvz.mongodb.net/?retryWrites=true&w=majority")
 
 db=client["efl2023"]
@@ -27,6 +36,15 @@ def get_all_players():
     for player in cursor:
         players.append(player)
     return json.loads(json_util.dumps(players))
+
+@app.route('/getallsoldplayers', methods=["GET"])
+def get_all_sold_players():
+    soldplayers = []
+    mystatusquery = {"status":"sold"}
+    cursor = collections.find(mystatusquery)
+    for allsoldplayer in cursor:
+        soldplayers.append(allsoldplayer)
+    return json.loads(json_util.dumps(soldplayers))
 
 @app.route('/getspecificplayer/<name>', methods=["GET"])
 def get_a_player(name):
@@ -87,12 +105,15 @@ def update_player(_id):
     #code to handle second owner update
     if updated_data['status'] == "sold":
         owner_team = updated_data['ownerTeam']
+        #Adding below code for mock auction
+        #player_points = updated_data['points']
 
         myquery = {"ownerName":owner_team}
 
         owners_data = ownercollection.find(myquery)
 
         for owner_items in owners_data:
+           
             owner_items["currentPurse"] = owner_items["currentPurse"] - int(updated_data["boughtFor"])
             owner_items["totalCount"] = owner_items["totalCount"] + 1
             owner_items["maxBid"] = owner_items["currentPurse"] - (35 * (15-owner_items["totalCount"]))
@@ -117,6 +138,117 @@ def update_player(_id):
    
     return json_util.dumps(result.raw_result)
 
+def generate_objects(input_arr, purse, mbid):
+    output_arr = []
+
+    for owner_name in input_arr:
+        obj = {
+            "ownerName": owner_name,
+            "totalPoints": 0,
+            "batCount": 0,
+            "ballCount": 0,
+            "wkCount": 0,
+            "fCount": 0,
+            "totalCount": 0,
+            "currentPurse": purse,
+            "maxBid": mbid,
+            "arCount": 0,
+            "standing":[0]
+        }
+        output_arr.append(obj)
+
+    return output_arr
+
+
+@app.route('/setup', methods=['POST'])
+def setup():
+    # create owners table
+    input_json = request.get_json()
+    objects = generate_objects(
+        input_json["teamNames"], input_json["purse"], input_json["mbid"])
+    ownercollection.drop()
+    resultowner = ownercollection.insert_many(objects)
+    print(resultowner)
+    
+
+    # reset players table
+    result = collections.update_many(
+        {}, {"$set": {"ownerTeam": "", "boughtFor": 0, "status": "unsold","points":0}})
+    return json_util.dumps(result.raw_result)
+@app.route('/deleteplayer/<_id>',methods=['PUT'])
+def delete_player(_id):
+
+    delete_data = request.get_json()
+    #return(delete_data)
+    
+    idfilter = {"_id": ObjectId(str(_id))}
+
+    amount = delete_data["boughtFor"]
+    owner_team = delete_data["ownerTeam"]
+    #player_points = delete_data['points']
+    delete_data["boughtFor"] = 0
+    delete_data["ownerName"] =""
+    #delete_data["points"] = 0
+    
+    
+
+    result = collections.update_one(idfilter, {"$set": delete_data})
+    #code to handle  owner db update
+    #owner_team = delete_data['ownerTeam']
+    #Adding below code for mock auction
+    #player_points = delete_data['points']
+
+    myquery = {"ownerName":owner_team}
+
+    owners_data = ownercollection.find(myquery)
+
+    for owner_items in owners_data:
+            #Adding below code for mock auction
+        #owner_items["totalPoints"] =  owner_items["totalPoints"] - player_points
+            
+        owner_items["currentPurse"] = owner_items["currentPurse"] + int(amount)
+        owner_items["totalCount"] = owner_items["totalCount"] - 1
+        owner_items["maxBid"] = owner_items["currentPurse"] - (35 * (15-owner_items["totalCount"]))
+        if delete_data["role"] == "Batter":
+            owner_items["batCount"] = owner_items["batCount"] - 1
+        elif delete_data["role"] == "Bowler":
+            owner_items["ballCount"] = owner_items["ballCount"] - 1
+        elif delete_data["role"] == "Allrounder":
+            owner_items["arCount"] = owner_items["arCount"] - 1
+                #owner_items["ballCount"] = owner_items["ballCount"] + 1
+        elif delete_data["role"] == "WK-Batter":
+            owner_items["batCount"] = owner_items["batCount"] - 1
+            owner_items["wkCount"] = owner_items["wkCount"] - 1
+        else:
+            print("Role not found")
+            
+        if delete_data["country"] != "India":
+            owner_items["fCount"] = owner_items["fCount"] - 1
+
+        filter_owner = {"_id": ObjectId(str(owner_items["_id"]))}
+        result_owner = ownercollection.update_one(filter_owner, {"$set": owner_items})
+    return json_util.dumps(result.raw_result)
+'''
+#Socket code
+@socketio.on("connect")
+def connected():
+    """event listener when client connects to the server"""
+    print(request.sid)
+    print("client has connected")
+    emit("connect",{"data":f"id: {request.sid} is connected"})
+@socketio.on("disconnect")
+def disconnected():
+    """event listener when client disconnects to the server"""
+    print("user disconnected")
+    emit("disconnect","user {request.sid} disconnected",broadcast=True)
+@socketio.on('join')
+def on_join(data):
+    team_name = data['team_name']
+    join_room(team_name)
+    socketio.emit('joined', {'msg': team_name +' has joined the room.'})
+'''
+    
 if __name__ == '__main__':
     app.run()
-    
+    #socketio.run(app, host='0.0.0.0', port=os.environ.get('PORT',5000))
+    #socketio.run(app)
