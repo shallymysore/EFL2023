@@ -250,5 +250,5 @@ def on_join(data):
     
 if __name__ == '__main__':
     #app.run()
-    socketio.run(app, host='0.0.0.0',debug=True,port=os.environ.get('PORT',5000))
+    socketio.run(app, host='0.0.0.0',debug=True,port=os.environ.get('PORT',8000))
     #socketio.run(app)
