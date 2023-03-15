@@ -27,7 +27,7 @@ ownercollection = db["eflCricketOwners"]
 
 @app.route("/")
 def welcome():
-    return "Welcome to EFL2023"
+    return "Welcome to EFL2023_testing"
 
 @app.route('/getallplayers', methods=["GET"])
 def get_all_players():
