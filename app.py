@@ -19,7 +19,7 @@ socketio = SocketIO(app)
 
 @app.route('/', methods=['GET'])
 def api():
-    return jsonify({'message': 'Hello, World!'})
+    return "Hello, World!"
 
 @socketio.on('connect')
 def on_connect():
