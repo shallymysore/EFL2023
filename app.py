@@ -15,7 +15,8 @@ app = Flask(__name__)
 CORS(app)
 
 #app.config['SECRET_KEY'] = 'mysecretkey'
-socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
+#socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
+socketio = SocketIO(app)
 
 '''
 @app.route('/', methods=['GET'])
@@ -31,7 +32,7 @@ if __name__ == '__main__':
 
 '''
 ##socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
-#socketio = SocketIO(app)
+#
 
 client = MongoClient("mongodb+srv://efladmin:god_is_watching@cluster0.eezohvz.mongodb.net/?retryWrites=true&w=majority")
 
