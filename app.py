@@ -14,9 +14,10 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-app.config['SECRET_KEY'] = 'mysecretkey'
+#app.config['SECRET_KEY'] = 'mysecretkey'
 socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
 
+'''
 @app.route('/', methods=['GET'])
 def api():
     return "Hello, World!"
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0',debug=True, port=8000)
 
 '''
-socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
+##socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
 #socketio = SocketIO(app)
 
 client = MongoClient("mongodb+srv://efladmin:god_is_watching@cluster0.eezohvz.mongodb.net/?retryWrites=true&w=majority")
@@ -42,7 +43,7 @@ ownercollection = db["eflCricketOwners"]
 
 @app.route("/")
 def welcome():
-    return "Welcome to EFL2023_testing"
+    return "Welcome to EFL2023"
 
 @app.route('/getallplayers', methods=["GET"])
 def get_all_players():
@@ -265,6 +266,6 @@ def on_join(data):
     
 if __name__ == '__main__':
     #app.run()
-    socketio.run(app, host='0.0.0.0',debug=True,port=os.environ.get('PORT',8000))
+    socketio.run(app, host='0.0.0.0',debug=True,port=8000))
     #socketio.run(app)
-'''
+
