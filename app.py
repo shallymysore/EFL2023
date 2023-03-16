@@ -14,6 +14,21 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+app.config['SECRET_KEY'] = 'mysecretkey'
+socketio = SocketIO(app)
+
+@app.route('/', methods=['GET'])
+def api():
+    return jsonify({'message': 'Hello, World!'})
+
+@socketio.on('connect')
+def on_connect():
+    print('A client connected.')
+
+if __name__ == '__main__':
+    socketio.run(app, host='0.0.0.0', port=5000)
+
+'''
 socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
 #socketio = SocketIO(app)
 
@@ -252,3 +267,4 @@ if __name__ == '__main__':
     #app.run()
     socketio.run(app, host='0.0.0.0',debug=True,port=os.environ.get('PORT',8000))
     #socketio.run(app)
+'''
