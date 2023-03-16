@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 app.config['SECRET_KEY'] = 'mysecretkey'
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
 
 @app.route('/', methods=['GET'])
 def api():
