@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 #app.config['SECRET_KEY'] = 'mysecretkey'
-socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
+#socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
 #socketio = SocketIO(app)
 
 '''
@@ -245,7 +245,7 @@ def delete_player(_id):
         filter_owner = {"_id": ObjectId(str(owner_items["_id"]))}
         result_owner = ownercollection.update_one(filter_owner, {"$set": owner_items})
     return json_util.dumps(result.raw_result)
-
+'''
 #Socket code
 @socketio.on("connect")
 def connected():
@@ -263,10 +263,10 @@ def on_join(data):
     team_name = data['team_name']
     join_room(team_name)
     socketio.emit('joined', {'msg': team_name +' has joined the room.'})
-
+'''
     
 if __name__ == '__main__':
-    #app.run()
-    socketio.run(app, host='0.0.0.0',debug=True,port=8000)
+    app.run()
+    #socketio.run(app, host='0.0.0.0',debug=True,port=8000)
     #socketio.run(app)
 
