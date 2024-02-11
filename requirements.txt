@@ -11,3 +11,4 @@ gevent==22.10.2
 greenlet==2.0.2
 simple-websocket==0.9.0
 Werkzeug==2.2.2
+gunicorn==19.7.1
