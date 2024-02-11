@@ -18,11 +18,11 @@ CORS(app)
 #socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
 #socketio = SocketIO(app)
 
-'''
+
 @app.route('/', methods=['GET'])
 def api():
     return "Hello, World!"
-
+'''
 @socketio.on('connect')
 def on_connect():
     print('A client connected.')
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 '''
 ##socketio = SocketIO(app, async_mode='eventlet', engineio_logger=True,logger=True, async_handlers=True, websocket=True, cors_allowed_origins="*")
 #
-
+'''
 client = MongoClient("mongodb+srv://efladmin:god_is_watching@cluster0.eezohvz.mongodb.net/?retryWrites=true&w=majority")
 
 db=client["efl2023"]
@@ -245,7 +245,7 @@ def delete_player(_id):
         filter_owner = {"_id": ObjectId(str(owner_items["_id"]))}
         result_owner = ownercollection.update_one(filter_owner, {"$set": owner_items})
     return json_util.dumps(result.raw_result)
-'''
+
 #Socket code
 @socketio.on("connect")
 def connected():
@@ -264,7 +264,7 @@ def on_join(data):
     join_room(team_name)
     socketio.emit('joined', {'msg': team_name +' has joined the room.'})
 '''
-    
+ 
 if __name__ == '__main__':
     app.run()
     #socketio.run(app, host='0.0.0.0',debug=True,port=8000)
